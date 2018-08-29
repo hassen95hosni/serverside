@@ -1,0 +1,231 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Maint;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.json.simple.JSONArray;
+
+import com.rethinkdb.RethinkDB;
+import com.rethinkdb.net.Connection;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class Servermulti {
+
+    int port;
+    ServerSocket server=null;
+    Socket client=null;
+    ExecutorService pool = null;
+    int clientcount=0;
+    
+    public static void main(String[] args) throws IOException {
+        Servermulti serverobj=new Servermulti(5000);
+        serverobj.startServer();
+    }
+    
+    Servermulti(int port){
+        this.port=port;
+        pool = Executors.newFixedThreadPool(5);
+    }
+
+    public void startServer() throws IOException {
+        
+        server=new ServerSocket(5000);
+        System.out.println("Server Booted");
+        String  c = "gnar";
+		UserClass $c = new UserClass();
+		$c.setName(c);
+		System.out.println($c.getName());
+		
+        while(true)
+        {
+            client=server.accept();
+            clientcount++;
+            System.out.println("client "+clientcount+" has connected \n obtaining name");
+            ServerThread runnable= new ServerThread(client,clientcount,this);
+            pool.execute(runnable); 
+        }
+        
+    }
+
+    private static class ServerThread implements Runnable {
+        
+        Servermulti serverp=null;
+        Socket client=null;
+        BufferedReader cin;
+        PrintStream cout;
+       // Scanner sc=new Scanner(System.in);
+        int id;
+        String s;
+        List<UserClass> list = new ArrayList<UserClass>();
+        ConnectionDb c = new ConnectionDb();
+     	  Connection conn = c.getConnection();
+
+      	RethinkDB r = c.getR();
+        UserClass hih = new UserClass();
+        Mac mac=new Mac() ;
+        
+        ServerThread(Socket client, int count ,Servermulti server ) throws IOException {
+            
+            this.client=client;
+            this.serverp=server;
+            this.id=count;
+            
+            //System.out.println(s);
+            cin=new BufferedReader(new InputStreamReader(client.getInputStream(),"Cp1252"));
+            cout=new PrintStream(client.getOutputStream());
+            InputStreamReader blah = new InputStreamReader(client.getInputStream());
+            //System.out.println("reading line");
+            s=cin.readLine();
+           // System.out.println("finding by name");
+            if(s.substring(0, 7).equals("username")) {
+            	
+            
+            list = hih.findByName(conn, r, s);
+            UserClass us = new UserClass();
+            //System.out.println("test on list");
+            if (list.isEmpty()) {
+            	System.out.println("user doesnt't exist \n adding user ");
+            	
+            	hih.setName(s);
+            	 us=hih.addusert(conn, r, hih); 
+            	//System.out.println("this is us :"+us.toString());
+            	
+            }
+            else {
+            	//System.out.println("else statmnt");
+            	hih.setName(s);
+            	
+            	System.out.println(list);
+            	
+            	
+            }
+            }
+            if(s.substring(0, 3).equals("mac:")) {
+            	
+            
+            //System.out.println("qdding qmc");
+           // mac.addMac(conn, r, s);
+            System.out.println("getting mac");
+            Object sisi =mac.getmac(conn, r, s);
+            //System.out.println("sisi"+sisi);
+            //list=hih.findByMac(conn, r, s);
+           // if (list.isEmpty()) {
+            	//System.out.println("user doesnt't exist \n adding user ");
+            	//List<String> macs = new ArrayList<String>();
+            	//macs.add(s);
+            	//hih.setMacs(s);
+            	
+            	//Object j = hih.adduser(conn, r, hih);
+            	//System.out.println(j.toString());
+            	//JSONArray tlala = (JSONArray)j;
+            	//System.out.println(tlala.get(3));
+           // }
+            }
+            System.out.println("Connection "+s+" established with client "+client);
+            
+            //System.out.println(blah.getEncoding());
+            //System.out.println(blah.read());
+        }
+      
+        
+        
+        public void run() {
+        	
+         // int x=1;
+         try{
+         while(true){
+        	 String line ;
+        	 StringBuilder sb = new StringBuilder();
+        	 s=cin.readLine();
+        	 System. out.print("Client("+id+") :"+s+"\n");
+        	 PingRes ping = new PingRes();
+        	 UserClass user = new UserClass();
+        	 ping=ping.toping(s, user);
+        	 System.out.println(ping.toString());
+       	  
+        	 ping.addping(ping.getUser(), ping.getAverage(), ping.getLoss(), ping.getType(), conn, r);
+          	  
+       
+       	System.out.println("connection has been made");
+
+        
+            BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in));
+			
+			int i = 0;
+			System.out.print("Server : ");
+		
+			//s=stdin.readLine();
+		//stdin.readLine()notifyAll();
+			
+		//	System.out.println(s);
+                     /*       s=sc.nextLine();
+                        if (s.equalsIgnoreCase("bye"))
+                        {
+                            cout.println("BYE");
+                            x=0;
+                            System.out.println("Connection ended by server");
+                            break;
+                        }
+			cout.println(s);*/
+		}
+		
+            
+         //       cin.close();
+          //      client.close();
+		//cout.close();
+         //       if(x==0) {
+		//	System.out.println( "Server cleaning up." );
+		//	System.exit(0); 
+            
+      //   }
+         } 
+         catch(IOException ex){
+             System.out.println("Error : "+ex);
+         }
+            
+ 		
+        }
+public void sendit (String ipaddrese,Socket client ) throws IOException {
+	PrintStream sout=new PrintStream(client.getOutputStream());
+	BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in));
+	System.out.print("Server : ");
+	s=stdin.readLine();
+	sout.println(s);
+	
+	
+}
+
+   
+    }
+    
+}
