@@ -22,6 +22,7 @@ import org.json.simple.JSONArray;
 
 import com.rethinkdb.RethinkDB;
 import com.rethinkdb.net.Connection;
+import com.rethinkdb.net.Cursor;
 
 
 
@@ -61,20 +62,73 @@ public class Servermulti {
         
         server=new ServerSocket(5000);
         System.out.println("Server Booted");
-        String  c = "gnar";
-		UserClass $c = new UserClass();
-		$c.setName(c);
-		System.out.println($c.getName());
+        
 		
         while(true)
-        {
+        { 
             client=server.accept();
             clientcount++;
             System.out.println("client "+clientcount+" has connected \n obtaining name");
             ServerThread runnable= new ServerThread(client,clientcount,this);
-            pool.execute(runnable); 
+            Send send= new Send(client,clientcount,this);
+            pool.execute(send);
+            pool.execute(runnable);
+            
+            
         }
         
+    }
+    
+    private static class Send implements Runnable {
+    	ConnectionDb c = new ConnectionDb();
+    	Connection conn = c.getConnection();
+    	 PrintStream cout;
+    	RethinkDB r = c.getR();
+    	 Servermulti serverp=null;
+         Socket client=null;
+         BufferedReader cin;
+        
+       
+         int id;
+    	
+    	
+Send(Socket client, int count ,Servermulti server ) throws IOException {
+            
+            this.client=client;
+            this.serverp=server;
+            this.id=count;
+           
+            cout=new PrintStream(client.getOutputStream());
+             }
+      
+        
+        
+    	
+    	
+		@Override
+		public void run() {
+			while (true) {
+				
+			
+			System.out.println("snd is running");
+		
+			// TODO Auto-generated method stub
+			Cursor<Object> cursor =r.db("maintennance").table("instruction").changes().run(conn);
+			System.out.println(cursor);
+			//if(!cursor.toList().isEmpty()) {
+				
+			
+			for (Object inst : cursor) {
+				System.out.print("Server : ");
+				System.out.println(inst.toString());
+				
+				cout.println(inst.toString());	
+				
+			//}
+			}
+			
+		}}
+    	
     }
 
     private static class ServerThread implements Runnable {
@@ -181,11 +235,11 @@ public class Servermulti {
         
             BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in));
 			
-			int i = 0;
-			System.out.print("Server : ");
+			//int i = 0;
+			
 		
 			//s=stdin.readLine();
-		//stdin.readLine()notifyAll();
+		//stdin.readLine().notifyAll();
 			
 		//	System.out.println(s);
                      /*       s=sc.nextLine();
@@ -195,8 +249,10 @@ public class Servermulti {
                             x=0;
                             System.out.println("Connection ended by server");
                             break;
-                        }
-			cout.println(s);*/
+                        }*/
+			
+			
+			
 		}
 		
             
