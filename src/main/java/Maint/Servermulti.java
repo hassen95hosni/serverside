@@ -120,7 +120,12 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
 			
 			for (Object inst : cursor) {
 				System.out.print("Server : ");
-				System.out.println(inst.toString());
+				Isntruction instructio = new Isntruction();
+				int firstid= inst.toString().indexOf("id=");
+				String blah = inst.toString().substring(firstid+3, firstid+39);
+				System.out.println(blah);
+				instructio=instructio.findInstructionByID(conn, r, blah);
+				System.out.println(instructio.toString());
 				
 				cout.println(inst.toString());	
 				

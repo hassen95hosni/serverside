@@ -18,6 +18,14 @@ public class Isntruction {
 	String id ;
 	String type ;
 	String add;
+	String sender ;
+	
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
 	public String getId() {
 		return id;
 	}
@@ -45,7 +53,7 @@ public class Isntruction {
 		//fi=database.db("maintennance").table("user").filter(row ->row.g("id").eq(id)).coerceTo("array").run(connection);
 		Cursor<Isntruction>cursor = database.db("maintennance").table("instruction").filter(row ->row.g("id").eq(id.toString())).run(connection);
 		fi =cursor.toList();
-		//System.out.println(fi.toString());
+		System.out.println(fi.toString());
 		for(int nn =0 ; nn<fi.size();nn++) {
 			System.out.println(fi.get(nn));
 		}
