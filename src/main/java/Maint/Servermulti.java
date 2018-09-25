@@ -105,7 +105,7 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
         
     	
     	
-		@Override
+		//@Override
 		public void run() {
 			while (true) {
 				
