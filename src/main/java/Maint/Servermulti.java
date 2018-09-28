@@ -49,7 +49,7 @@ public class Servermulti {
     int clientcount=0;
     
     public static void main(String[] args) throws IOException {
-        Servermulti serverobj=new Servermulti(5000);
+        Servermulti serverobj=new Servermulti(55000);
         serverobj.startServer();
     }
     
@@ -60,7 +60,7 @@ public class Servermulti {
 
     public void startServer() throws IOException {
         
-        server=new ServerSocket(5000);
+        server=new ServerSocket(2000);
         System.out.println("Server Booted");
         
 		
@@ -68,11 +68,22 @@ public class Servermulti {
         { 
             client=server.accept();
             clientcount++;
-            System.out.println("client "+clientcount+" has connected \n obtaining name");
-            ServerThread runnable= new ServerThread(client,clientcount,this);
-            Send send= new Send(client,clientcount,this);
-            pool.execute(send);
-            pool.execute(runnable);
+            System.out.println("client "+client.toString()+clientcount+" has connected \n obtaining name");
+            try {
+            
+            	ServerThread runnable= new ServerThread(client,clientcount,this);
+            	
+            	Send send= new Send(client,clientcount,this);
+                pool.execute(send);
+                pool.execute(runnable);
+                
+            }catch (Exception e) {
+				// TODO: handle exception
+
+            	System.out.println("there is a problem");
+            	System.out.println(e.getMessage());
+			}
+            
             
             
         }
@@ -159,30 +170,38 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
             this.serverp=server;
             this.id=count;
             
-            //System.out.println(s);
+            System.out.println("thread has started");
             cin=new BufferedReader(new InputStreamReader(client.getInputStream(),"Cp1252"));
             cout=new PrintStream(client.getOutputStream());
             InputStreamReader blah = new InputStreamReader(client.getInputStream());
             //System.out.println("reading line");
             s=cin.readLine();
            // System.out.println("finding by name");
-            if(s.substring(0, 7).equals("username")) {
-            	
-            
-            list = hih.findByName(conn, r, s);
+            System.out.println(s.toString());
+            if(s.contains("requested")) {
+            		int first =s.indexOf("requested:");
+            		int last=s.indexOf(",", first);
+            		String idi = s.substring(first+10,last );
+            		String results=s.substring(last+1);
+            		r.table("instruction").get(idi).update(r.hashMap("result",results)).run(conn);
+            }
+            if(s.contains("username")) {
+            	System.out.println("searching for user");
+            String username= s.substring(s.indexOf("username:")+9,s.length()-1);
+            list = hih.findByName(conn, r, username);
             UserClass us = new UserClass();
             //System.out.println("test on list");
             if (list.isEmpty()) {
             	System.out.println("user doesnt't exist \n adding user ");
             	
-            	hih.setName(s);
+            	hih.setName(username);
             	 us=hih.addusert(conn, r, hih); 
             	//System.out.println("this is us :"+us.toString());
             	
             }
             else {
             	//System.out.println("else statmnt");
-            	hih.setName(s);
+            	hih.setName(username);
             	
             	System.out.println(list);
             	

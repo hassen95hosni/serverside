@@ -23,7 +23,15 @@ String id ;
 String name;
 String macs;
 String ipAddresse;
+String average;
 
+
+public String getAverage() {
+	return average;
+}
+public void setAverage(String average) {
+	this.average = average;
+}
 public String getIpAddresse() {
 	return ipAddresse;
 }
@@ -65,7 +73,7 @@ public String toString() {
 public Object adduser(Connection connection , RethinkDB database , UserClass user) {
 	//List<String> list = user.getMacs();
 	//String t = new Gson().toJson(list);
-	Object j =database.db("maintennance").table("user").insert(database.hashMap("name", user.getName()).with("macs",user.getMacs()).with("ipAddresse",user.getIpAddresse())).run(connection);
+	Object j =database.db("maintennance").table("user").insert(database.hashMap("name", user.getName()).with("average", 0).with("macs",user.getMacs()).with("ipAddresse",user.getIpAddresse())).run(connection);
    	System.out.println("voila"+database.db("maintennance").table("user").eqJoin("pc_id", database.db("maintennance").table("user")).run(connection).toString());
 	UserClass users = new UserClass();
 	ObjectMapper mapper = new ObjectMapper();

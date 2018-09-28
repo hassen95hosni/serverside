@@ -24,10 +24,11 @@ public static RethinkDB getR() {
 
 public ConnectionDb() {
 	connection = r.connection().connect();
+	System.out.println("database connected");
 	//System.out.println(connection = r.connection().connect());
 	//r.db("maintennance").tableCreate("ping").run(connection);
 
-   	r.db("maintennance").table("ping").insert(r.hashMap("sender","mac").with("loss", "per centage %").with("average", "per milleseconde")).run(connection);
+   	//r.db("maintennance").table("ping").insert(r.hashMap("sender","mac").with("loss", "per centage %").with("average", "per milleseconde")).run(connection);
 	
 	
 	// TODO Auto-generated constructor stub
