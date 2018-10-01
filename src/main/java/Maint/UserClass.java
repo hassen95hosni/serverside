@@ -24,8 +24,16 @@ String name;
 String macs;
 String ipAddresse;
 String average;
+String initialAddresse ;
 
 
+
+public String getInitialAddresse() {
+	return initialAddresse;
+}
+public void setInitialAddresse(String initialAddresse) {
+	this.initialAddresse = initialAddresse;
+}
 public String getAverage() {
 	return average;
 }
