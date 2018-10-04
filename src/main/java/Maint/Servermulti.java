@@ -156,7 +156,7 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
        // Scanner sc=new Scanner(System.in);
         int id;
         String s;
-        List<UserClass> list = new ArrayList<UserClass>();
+        List<Object> list = new ArrayList<Object>();
         ConnectionDb c = new ConnectionDb();
      	  Connection conn = c.getConnection();
 
@@ -206,7 +206,18 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
             	hih.setName(username);
             	
             	System.out.println(list);
-            	cout.println(list.get(1).getName()+","+list.get(1).getInitialAddresse());
+            	int a = list.get(0).toString().indexOf("name=")+5;
+            	int b = list.get(0).toString().indexOf(",",a);
+            	String name = list.get(0).toString().substring(a, b);
+            	String  initial="no";
+            	try {
+					a=list.get(0).toString().indexOf("initial=")+8;
+					b= list.get(0).toString().indexOf(",",a);
+					initial = list.get(0).toString().substring(a, b);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+            	cout.println(name+","+initial);
             	
             	
             }

@@ -143,11 +143,11 @@ public List<Object> findByMac(Connection connection , RethinkDB database ,String
 	System.out.println(fi.toString());
 	return fi ;
 }
-public List<UserClass> findByName(Connection connection , RethinkDB database ,String name){
+public List<Object> findByName(Connection connection , RethinkDB database ,String name){
 	
-	List<UserClass> fi = new ArrayList<UserClass>();
+	List<Object> fi = new ArrayList<Object>();
 	//fi=database.db("maintennance").table("user").filter(row ->row.g("name").equals(name)).coerceTo("array").run(connection);
-	Cursor<UserClass>cursor = database.db("maintennance").table("user").filter(row ->row.g("name").eq(name)).run(connection);
+	Cursor<Object>cursor = database.db("maintennance").table("user").filter(row ->row.g("name").eq(name)).run(connection);
 	fi =cursor.toList();
 	//System.out.println(fi.toString());
 	return fi ;
