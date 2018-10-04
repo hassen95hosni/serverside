@@ -60,7 +60,7 @@ public class Servermulti {
 
     public void startServer() throws IOException {
         
-        server=new ServerSocket(2000);
+        server=new ServerSocket(3000);
         System.out.println("Server Booted");
         
 		
@@ -148,7 +148,7 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
     }
 
     private static class ServerThread implements Runnable {
-        
+        String usernames;
         Servermulti serverp=null;
         Socket client=null;
         BufferedReader cin;
@@ -185,9 +185,11 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
             		String results=s.substring(last+1);
             		r.table("instruction").get(idi).update(r.hashMap("result",results)).run(conn);
             }
-            if(s.contains("username")) {
+            if(s.contains("usrname")) {
             	System.out.println("searching for user");
-            String username= s.substring(s.indexOf("username:")+9,s.length()-1);
+            String username= s.substring(s.indexOf("username:")+9,s.length());
+            usernames=username;
+            System.out.println("names "+usernames);
             list = hih.findByName(conn, r, username);
             UserClass us = new UserClass();
             //System.out.println("test on list");
@@ -204,6 +206,7 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
             	hih.setName(username);
             	
             	System.out.println(list);
+            	cout.println(list.get(1).getName()+","+list.get(1).getInitialAddresse());
             	
             	
             }
@@ -250,8 +253,8 @@ Send(Socket client, int count ,Servermulti server ) throws IOException {
         	 UserClass user = new UserClass();
         	 ping=ping.toping(s, user);
         	 System.out.println(ping.toString());
-       	  
-        	 ping.addping(ping.getUser(), ping.getAverage(), ping.getLoss(), ping.getType(), conn, r);
+       	  	System.out.println("usernames"+usernames);
+        	 ping.addping(usernames, ping.getAverage(), ping.getLoss(), ping.getType(), conn, r);
           	  
        
        	System.out.println("connection has been made");

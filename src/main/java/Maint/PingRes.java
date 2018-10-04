@@ -12,6 +12,14 @@ public class PingRes {
 	float average;
 	int loss;
 	String type;
+	String name ;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -42,17 +50,19 @@ public class PingRes {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public PingRes(Long id, UserClass user, float average, int loss, String type) {
+	
+	public PingRes(Long id, UserClass user, float average, int loss, String type, String name) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.average = average;
 		this.loss = loss;
 		this.type = type;
+		this.name = name;
 	}
-	public void addping(UserClass user , float average , int loss, String type, Connection connection , RethinkDB database ){
+	public void addping(String name , float average , int loss, String type, Connection connection , RethinkDB database ){
 		Date d = new Date(System.currentTimeMillis());
-	Object j =database.db("maintennance").table("ping").insert(database.hashMap("user", user).with("average",average).with("loss",loss).with("date",d.toString())).run(connection);
+	Object j =database.db("maintennance").table("ping").insert(database.hashMap("user", name).with("average",average).with("loss",loss).with("date",d.toString())).run(connection);
 System.out.println(j.toString());
 
 
@@ -68,7 +78,7 @@ public PingRes() {
 	}
 public PingRes toping(String pingres,UserClass user){
 System.out.println(pingres);
-PingRes ping = new PingRes(id, user, average, loss, type);
+PingRes ping = new PingRes(id, user, average, loss, type,name);
 int a = pingres.indexOf("(");
 int b = pingres.indexOf(")");
 
@@ -83,6 +93,7 @@ ping.setAverage(average);
 //System.out.println(average);
 ping.setUser(user);
 ping.setLoss(loss);
+ping.setName(name);
 //System.out.println(loss);
 }
 	catch (Exception e) {
